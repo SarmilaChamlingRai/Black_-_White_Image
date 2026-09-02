@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black & White Image Colorization</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <span class="icon"></span>
+                Black & White Colorizer
+            </a>
+            <div>
+                {% if model_ready %}
+                <span class="badge badge-success"><span class="icon"></span> Model Ready</span>
+                {% else %}
+                <span class="badge badge-danger"><span class="icon"></span> No Model</span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-8 offset-2">
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <span class="icon"></span>
+                    <span>{{ message }}</span>
+                    <button class="alert-close" onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <div class="card main-card">
+                    <div class="card-body">
+
+                        <div class="text-center">
+                            <div class="icon-wrapper">
+                                <span class="icon-large"></span>
+                            </div>
+                            <h2>Colorize Your Black & White Image</h2>
+                            <p class="text-muted">Upload a black & white image and AI will add colors</p>
+                        </div>
+
+                        <form enctype="multipart/form-data" method="POST" action="/colorize">
+
+                            <div class="upload-area" id="uploadArea">
+                                <span class="display-icon"></span>
+                                <h5>Drag & Drop your image here</h5>
+                                <p class="text-muted">or</p>
+                                <label for="imageInput" class="btn btn-primary">
+                                    <span class="icon"></span> Browse Files
+                                </label>
+                                <input type="file" id="imageInput" name="image" accept="image/*" required
+                                    style="display:none;" onchange="previewImage(event)">
+                                <p class="text-muted small">
+                                    <span class="icon"></span> Supported: JPG, PNG, JPEG, GIF, BMP, WEBP
+                                </p>
+                            </div>
+
+                            <div id="previewContainer" class="text-center" style="display:none;">
+                                <div class="preview-wrapper">
+                                    <img id="imagePreview" class="img-fluid" alt="Image preview">
+                                    <button type="button" class="btn btn-danger remove-btn" onclick="clearImage()">
+                                        <span class="icon"></span> Remove
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg" id="colorizeBtn" {% if not
+                                    model_ready %}disabled{% endif %}>
+                                    <span class="icon"></span>
+                                    {% if model_ready %}Colorize Image{% else %}No Model{% endif %}
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="text-center">
+                            <span class="feature-icon"></span>
+                            <h6>Upload</h6>
+                            <small class="text-muted">Upload black & white image</small>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="text-center">
+                            <span class="feature-icon"></span>
+                            <h6>AI Process</h6>
+                            <small class="text-muted">AI adds colors automatically</small>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="text-center">
+                            <span class="feature-icon"></span>
+                            <h6>Download</h6>
+                            <small class="text-muted">Download colorized result</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>
+                    <span class="icon"></span> Black & White Image Colorization
+                </p>
+                <p>
+                    <span class="icon"></span> Powered by TensorFlow & Flask
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>
